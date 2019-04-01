@@ -79,6 +79,20 @@ func (a *Allocations) GC(alloc *Allocation, q *QueryOptions) error {
 	return err
 }
 
+func (a *Allocations) Stop(alloc *Allocation, q *QueryOptions) (*AllocStopResponse, error) {
+	var resp AllocStopResponse
+	_, err := a.client.putQuery("/v1/allocation/"+alloc.ID+"/stop", nil, &resp, q)
+	return &resp, err
+}
+
+// AllocStopResponse is the response to an `AllocStopRequest`
+type AllocStopResponse struct {
+	// EvalID is the id of the follow up evalution for the rescheduled alloc.
+	EvalID string
+
+	WriteMeta
+}
+
 // Allocation is used for serialization of allocations.
 type Allocation struct {
 	ID                    string
